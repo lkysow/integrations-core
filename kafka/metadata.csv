@@ -48,7 +48,7 @@ kafka.producer.request_rate,gauge,10,request,second,Number of producer requests 
 kafka.producer.response_rate,gauge,10,response,second,Number of producer responses per second.,1,kafka,prod resp
 kafka.producer.requests_in_flight,gauge,10,request,,The current number of in-flight requests awaiting a response.,-1,kafka,req in flight
 kafka.producer.request_latency_avg,gauge,10,millisecond,,Producer average request latency.,-1,kafka,prod req latency avg
-kafka.producer.request_latency_max,gauge,10,milisecond,,The maximum request latency in ms.,-1,kafka, prod req latency max
+kafka.producer.request_latency_max,gauge,10,milisecond,,The maximum request latency in ms.,-1,kafka,prod req latency max
 kafka.producer.bytes_out,gauge,10,bytes,second,Producer bytes out rate.,1,kafka,prod bytes out
 kafka.producer.metadata_age,gauge,10,seconds,,The age in seconds of the current producer metadata being used.,-1,kafka,metadata age
 kafka.producer.message_rate,gauge,10,message,second,Producer message rate.,1,kafka,prod msg rate
