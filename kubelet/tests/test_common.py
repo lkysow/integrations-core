@@ -48,12 +48,27 @@ def test_container_filter(monkeypatch):
     is_excluded.assert_called_once()
     is_excluded.assert_called_with(ctr_name, ctr_image)
 
+    # Clear exclusion cache
+    filter.cache = {}
+
     # Test existing filtered container
     is_excluded.reset_mock()
     is_excluded.return_value = True
     assert filter.is_excluded(short_cid) is True
     is_excluded.assert_called_once()
     is_excluded.assert_called_with(ctr_name, ctr_image)
+
+
+def test_filter_staticpods(monkeypatch):
+    is_excluded = mock.Mock(return_value=True)
+    monkeypatch.setattr('datadog_checks.kubelet.common.is_excluded', is_excluded)
+
+    pods = json.loads(mock_from_file('pods.json'))
+    filter = ContainerFilter(pods)
+
+    # kube-proxy-gke-haissam-default-pool-be5066f1-wnvn is static
+    assert filter.is_excluded("cid", "260c2b1d43b094af6d6b4ccba082c2db") is False
+    is_excluded.assert_not_called()
 
 
 def test_pod_by_uid():

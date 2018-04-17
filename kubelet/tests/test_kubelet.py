@@ -315,6 +315,10 @@ def test_report_container_spec_metrics(monkeypatch):
     check = KubeletCheck('kubelet', None, {}, [{}])
     monkeypatch.setattr(check, 'retrieve_pod_list', mock.Mock(return_value=json.loads(mock_from_file('pods.json'))))
     monkeypatch.setattr(check, 'gauge', mock.Mock())
+
+    attrs = {'is_excluded.return_value': False}
+    check.container_filter = mock.Mock(**attrs)
+
     pod_list = check.retrieve_pod_list()
 
     instance_tags = ["one:1", "two:2"]

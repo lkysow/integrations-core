@@ -152,6 +152,7 @@ class KubeletCheck(PrometheusCheck, CadvisorScraper):
 
         # Free up memory
         self.pod_list = None
+        self.container_filter = None
 
     def perform_kubelet_query(self, url, verbose=True, timeout=10):
         """
@@ -277,6 +278,10 @@ class KubeletCheck(PrometheusCheck, CadvisorScraper):
                         cid = ctr_status.get('containerID')
                         break
                 if not cid:
+                    continue
+
+                pod_uid = pod.get('metadata', {}).get('uid')
+                if self.container_filter.is_excluded(cid, pod_uid):
                     continue
 
                 tags = get_tags('%s' % cid, True) + instance_tags
@@ -439,6 +444,10 @@ class KubeletCheck(PrometheusCheck, CadvisorScraper):
         for metric in message.metric:
             if self._is_container_metric(metric):
                 c_id = self._get_container_id(metric.label)
+                pod_uid = self._get_pod_uid(metric.label)
+                if self.container_filter.is_excluded(c_id, pod_uid):
+                    continue
+
                 tags = get_tags('docker://%s' % c_id, True)
 
                 # FIXME we are forced to do that because the Kubelet PodList isn't updated
@@ -481,6 +490,10 @@ class KubeletCheck(PrometheusCheck, CadvisorScraper):
                 c_name = self._get_container_label(metric.label, 'name')
                 if not c_name:
                     continue
+                pod_uid = self._get_pod_uid(metric.label)
+                if self.container_filter.is_excluded(c_id, pod_uid):
+                    continue
+
                 tags = get_tags('docker://%s' % c_id, True)
 
                 # FIXME we are forced to do that because the Kubelet PodList isn't updated
@@ -511,6 +524,10 @@ class KubeletCheck(PrometheusCheck, CadvisorScraper):
             if self._is_container_metric(metric):
                 limit = getattr(metric, METRIC_TYPES[message.type]).value
                 c_id = self._get_container_id(metric.label)
+                pod_uid = self._get_pod_uid(metric.label)
+                if self.container_filter.is_excluded(c_id, pod_uid):
+                    continue
+
                 tags = get_tags('docker://%s' % c_id, True)
 
                 if m_name:
