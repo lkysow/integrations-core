@@ -14,6 +14,7 @@ AGENT_BASED_INTEGRATIONS = [
     'apache',
     'aspdotnet',
     'btrfs',
+    'couch',
     'datadog_checks_base',
     'directory',
     'disk',

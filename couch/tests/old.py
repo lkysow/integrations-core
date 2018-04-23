@@ -1,6 +1,6 @@
-# (C) Datadog, Inc. 2010-2017
+# (C) Datadog, Inc. 2018
 # All rights reserved
-# Licensed under Simplified BSD License (see LICENSE)
+# Licensed under a 3-clause BSD style license (see LICENSE)
 
 # stdlib
 from urlparse import urljoin
@@ -75,17 +75,6 @@ class CouchTestCase(AgentCheckTest):
                                 count=2) # One per DB + one to get the version
 
         self.coverage_report()
-
-    def test_bad_config(self):
-        self.assertRaises(
-            Exception,
-            lambda: self.run_check({"instances": [{"server": "http://localhost:5985"}]})
-        )
-
-        self.assertServiceCheck(self.check.SERVICE_CHECK_NAME,
-                                status=AgentCheck.CRITICAL,
-                                tags=['instance:http://localhost:5985'],
-                                count=1)
 
     def test_couch_whitelist(self):
         DB_WHITELIST = ["_users"]
@@ -228,28 +217,6 @@ class TestCouchdb2(AgentCheckTest):
 
         #  Raises when COVERAGE=true and coverage < 100%
         self.coverage_report()
-
-    def test_bad_config(self):
-        conf = self.NODE1.copy()
-        conf.pop('server')
-        self.assertRaises(
-            Exception,
-            lambda: self.run_check({"instances": [conf]})
-        )
-
-    def test_wrong_config(self):
-        conf = self.NODE1.copy()
-        conf['server'] = "http://127.0.0.1:11111"
-
-        self.assertRaises(
-            Exception,
-            lambda: self.run_check({"instances": [conf]})
-        )
-
-        self.assertServiceCheck(self.check.SERVICE_CHECK_NAME,
-                                status=AgentCheck.CRITICAL,
-                                tags=["instance:{0}".format(conf['name'])],
-                                count=1)
 
     def test_db_whitelisting(self):
         confs = []
