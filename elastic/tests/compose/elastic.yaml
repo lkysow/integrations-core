@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   elastic:
-    image: "datadog/docker-library:elasticsearch_${ELASTIC_VERSION}"
+    image: "${ELASTIC_DOCKER}${ELASTIC_VERSION}"
     ports:
       - "9200:9200"
       - "9300:9300"

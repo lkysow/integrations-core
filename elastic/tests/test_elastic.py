@@ -530,7 +530,7 @@ def test_config_parser(aggregator, spin_up_elastic):
         "is_external": "yes",
         "url": "http://foo.bar",
         "tags": ["a", "b:c"],
-        }
+    }
     c = elastic_check.get_instance_config(instance)
     assert c.username == "user"
     assert c.password == "pass"
